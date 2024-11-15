@@ -2,12 +2,16 @@ package com.scalable.service.delivery.controller;
 
 
 import com.scalable.service.delivery.model.Customer;
+import com.scalable.service.delivery.model.Order;
 import com.scalable.service.delivery.service.CustomerService;
+import com.scalable.service.delivery.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -16,10 +20,17 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class CustomerController {
     private final CustomerService customerService;
+    private final OrderService orderService;
 
     @PostMapping("/register")
     public ResponseEntity<Customer> registerCustomer(@Valid @RequestBody Customer customer) {
         Customer registeredCustomer = customerService.registerCustomer(customer);
         return ResponseEntity.ok(registeredCustomer);
+    }
+
+    @GetMapping("/customer/{customerId}/orders")
+    public ResponseEntity<List<Order>> getOrderHistory(@PathVariable String customerId) {
+        List<Order> orderHistory = orderService.getOrderHistory(customerId);
+        return ResponseEntity.ok(orderHistory);
     }
 }

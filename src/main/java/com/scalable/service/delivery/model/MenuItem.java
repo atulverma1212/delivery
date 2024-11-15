@@ -1,7 +1,8 @@
 package com.scalable.service.delivery.model;
 
+import com.scalable.service.delivery.enums.MenuItemType;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,8 +15,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "restaurants")
-public class Restaurant {
+@Document(collection = "menuItems")
+public class MenuItem {
     @Id
     private String id;
 
@@ -23,13 +24,16 @@ public class Restaurant {
     @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     private String name;
 
-    @NotBlank(message = "Address is mandatory")
-    @Size(min = 5, max = 200, message = "Address must be between 5 and 200 characters")
-    private String address;
+    @NotNull(message = "Price is mandatory")
+    private Double price;
 
-    @NotBlank(message = "Phone number is mandatory")
-    @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Phone number is invalid")
-    private String phoneNumber;
+    @NotBlank(message = "Description is mandatory")
+    @Size(min = 5, max = 500, message = "Description must be between 5 and 500 characters")
+    private String description;
 
-    private Menu menu;
+    @NotNull(message = "Availability is mandatory")
+    private Boolean availability;
+
+    @NotNull(message = "Type is mandatory")
+    private MenuItemType type;
 }
