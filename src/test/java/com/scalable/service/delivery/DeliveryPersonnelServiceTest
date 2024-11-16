@@ -1,0 +1,52 @@
+package com.scalable.service.delivery.service;
+
+import com.scalable.service.delivery.model.DeliveryPersonnel;
+import com.scalable.service.delivery.repository.DeliveryPersonnelRepository;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+public class DeliveryPersonnelServiceTest {
+
+    @Mock
+    private DeliveryPersonnelRepository deliveryPersonnelRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @InjectMocks
+    private DeliveryPersonnelService deliveryPersonnelService;
+
+    @Test
+    public void registerDeliveryPersonnel() {
+        DeliveryPersonnel deliveryPersonnel = new DeliveryPersonnel();
+        deliveryPersonnel.setEmail("ayushsengar9896@gmail.com");
+        deliveryPersonnel.setPassword("123456789");
+        when(deliveryPersonnelRepository.findByEmail(any())).thenReturn(java.util.Optional.empty());
+        when(passwordEncoder.encode(anyString())).thenReturn("encoded-password");
+        when(deliveryPersonnelRepository.save(any(DeliveryPersonnel.class))).thenReturn(deliveryPersonnel);
+
+        DeliveryPersonnel registered = deliveryPersonnelService.registerDeliveryPersonnel(deliveryPersonnel);
+
+        verify(deliveryPersonnelRepository, times(1)).save(any(DeliveryPersonnel.class));
+        assert registered.getEmail().equals("ayushsengar9896@gmail.com");
+    }
+
+    @Test
+    public void findByEmail() {
+        DeliveryPersonnel deliveryPersonnel = new DeliveryPersonnel();
+        deliveryPersonnel.setEmail("ayushsengar9896@gmail.com");
+
+        when(deliveryPersonnelRepository.findByEmail(any())).thenReturn(java.util.Optional.of(deliveryPersonnel));
+
+        DeliveryPersonnel found = deliveryPersonnelService.findByEmail("ayushsengar9896@gmail.com").orElse(null);
+
+        assert found != null;
+        assert found.getEmail().equals("ayushsengar9896@gmail.com");
+    }
+}

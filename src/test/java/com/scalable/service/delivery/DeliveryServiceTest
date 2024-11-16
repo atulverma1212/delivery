@@ -1,0 +1,53 @@
+package com.scalable.service.delivery.service;
+
+import com.scalable.service.delivery.model.DeliveryPersonnel;
+import com.scalable.service.delivery.model.Order;
+import com.scalable.service.delivery.repository.DeliveryPersonnelRepository;
+import com.scalable.service.delivery.repository.OrderRepository;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+public class DeliveryServiceTest {
+
+    @Mock
+    private DeliveryPersonnelRepository deliveryPersonnelRepository;
+
+    @Mock
+    private OrderRepository orderRepository;
+
+    @InjectMocks
+    private DeliveryService deliveryService;
+
+    @Test
+    public void getAvailableDeliveries() {
+        Order order = new Order();
+        order.setStatus("Ready for Delivery");
+
+        when(orderRepository.findByStatus(anyString())).thenReturn(List.of(order));
+
+        List<Order> orders = deliveryService.getAvailableDeliveries();
+
+        assert orders.size() == 1;
+        assert orders.get(0).getStatus().equals("Ready for Delivery");
+    }
+
+    @Test
+    public void setAvailability() {
+        DeliveryPersonnel deliveryPersonnel = new DeliveryPersonnel();
+        deliveryPersonnel.setAvailable(false);
+
+        when(deliveryPersonnelRepository.findById(any())).thenReturn(Optional.of(deliveryPersonnel));
+
+        deliveryService.setAvailability(1L, true);
+
+        verify(deliveryPersonnelRepository, times(1)).save(deliveryPersonnel);
+        assert deliveryPersonnel.isAvailable() == true;
+    }
+}

@@ -1,0 +1,72 @@
+package com.scalable.service.delivery.controller;
+
+import com.scalable.service.delivery.model.DeliveryPersonnel;
+import com.scalable.service.delivery.service.DeliveryPersonnelService;
+import com.scalable.service.delivery.service.JwtService;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
+public class DeliveryControllerTest {
+
+    private MockMvc mockMvc;
+
+    @Mock
+    private DeliveryPersonnelService deliveryPersonnelService;
+
+    @Mock
+    private JwtService jwtService;
+
+    @Mock
+    private AuthenticationManager authenticationManager;
+
+    @InjectMocks
+    private DeliveryController deliveryController;
+
+    @Test
+    public void registerDeliveryPersonnel() throws Exception {
+        DeliveryPersonnel deliveryPersonnel = new DeliveryPersonnel();
+        deliveryPersonnel.setEmail("ayushsengar9896@gmail.com");
+        deliveryPersonnel.setPassword("123456789");
+
+        when(deliveryPersonnelService.registerDeliveryPersonnel(any(DeliveryPersonnel.class))).thenReturn(deliveryPersonnel);
+
+        mockMvc = MockMvcBuilders.standaloneSetup(deliveryController).build();
+
+        mockMvc.perform(post("/delivery/register")
+                .contentType("application/json")
+                .content("{\"email\":\"ayushsengar9896@gmail.com\",\"password\":\"123456789\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Delivery Personnel registered successfully"));
+    }
+
+    @Test
+    public void loginDeliveryPersonnel() throws Exception {
+        DeliveryPersonnel deliveryPersonnel = new DeliveryPersonnel();
+        deliveryPersonnel.setEmail("ayushsengar9896@gmail.com");
+        deliveryPersonnel.setPassword("123456789");
+        Authentication authentication = mock(Authentication.class);
+        when(authenticationManager.authenticate(any())).thenReturn(authentication);
+        when(jwtService.generateToken(anyString())).thenReturn("mock-jwt-token");
+
+        mockMvc = MockMvcBuilders.standaloneSetup(deliveryController).build();
+
+        mockMvc.perform(post("/delivery/login")
+                .contentType("application/json")
+                .content("{\"email\":\"ayushsengar9896@gmail.com\",\"password\":\"123456789\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("mock-jwt-token"));
+    }
+}

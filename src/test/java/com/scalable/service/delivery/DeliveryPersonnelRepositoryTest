@@ -1,0 +1,24 @@
+package com.scalable.service.delivery.repository;
+
+import com.scalable.service.delivery.model.DeliveryPersonnel;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@DataJpaTest
+public class DeliveryPersonnelRepositoryTest {
+
+    @Autowired
+    private DeliveryPersonnelRepository deliveryPersonnelRepository;
+
+    @Test
+    public void findByEmailTest() {
+        DeliveryPersonnel deliveryPersonnel = new DeliveryPersonnel();
+        deliveryPersonnel.setEmail("ayushsengar9896@gmail.com");
+        deliveryPersonnelRepository.save(deliveryPersonnel);
+
+        assertTrue(deliveryPersonnelRepository.findByEmail("ayushsengar9896@gmail.com").isPresent());
+    }
+}
