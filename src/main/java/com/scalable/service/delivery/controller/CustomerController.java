@@ -8,6 +8,7 @@ import com.scalable.service.delivery.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,8 @@ public class CustomerController {
         return ResponseEntity.ok(registeredCustomer);
     }
 
-    @GetMapping("/customer/{customerId}/orders")
+    @GetMapping("/{customerId}/orders")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<List<Order>> getOrderHistory(@PathVariable String customerId) {
         List<Order> orderHistory = orderService.getOrderHistory(customerId);
         return ResponseEntity.ok(orderHistory);

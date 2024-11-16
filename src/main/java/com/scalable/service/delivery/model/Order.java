@@ -1,5 +1,6 @@
 package com.scalable.service.delivery.model;
 
+import com.scalable.service.delivery.enums.OrderStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -31,8 +32,7 @@ public class Order {
     @NotNull(message = "Items are mandatory")
     private List<OrderItem> items;
 
-    @NotBlank(message = "Order status is mandatory")
-    private String status;
+    private OrderStatus status;
 
     private Double totalPrice;
 

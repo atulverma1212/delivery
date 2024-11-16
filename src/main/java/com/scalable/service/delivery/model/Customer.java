@@ -27,7 +27,7 @@ public class Customer {
     private String username;
 
     @NotBlank(message = "Password is mandatory")
-    @Size(min = 6, message = "Password must be at least 6 characters")
+    @Size(min = 4, message = "Password must be at least 6 characters")
     private String password;
 
     @NotBlank(message = "Address is mandatory")
@@ -36,4 +36,6 @@ public class Customer {
 
     @NotBlank(message = "Payment details are mandatory")
     private String paymentDetails;
+
+    private String userId;
 }
