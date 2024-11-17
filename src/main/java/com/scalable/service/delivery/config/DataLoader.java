@@ -34,15 +34,12 @@ public class DataLoader implements CommandLineRunner {
         Permission writePermission = new Permission();
         writePermission.setName("WRITE_PRIVILEGE");
         permissionRepository.save(writePermission);
-        // Create Roles
-        Role adminRole = new Role();
-        adminRole.setName(ROLE.ADMIN);
-        adminRole.setPermissions(Set.of(readPermission, writePermission));
-        roleRepository.save(adminRole);
-        Role userRole = new Role();
-        userRole.setName(ROLE.USER);
-        userRole.setPermissions(Set.of(readPermission));
-        roleRepository.save(userRole);
+        Set<Permission> readWritePermissions = Set.of(readPermission, writePermission);
+        Role adminRole = roleRepository.save(Role.builder().name(ROLE.ADMIN).permissions(readWritePermissions).build());
+        roleRepository.save(Role.builder().name(ROLE.CUSTOMER).permissions(readWritePermissions).build());
+        roleRepository.save(Role.builder().name(ROLE.RESTAURANT).permissions(readWritePermissions).build());
+        roleRepository.save(Role.builder().name(ROLE.DELIVERY_EXPERT).permissions(readWritePermissions).build());
+        roleRepository.save(Role.builder().name(ROLE.USER).permissions(Set.of(readPermission)).build());
 
         // Create Users
         User adminUser = User.builder()

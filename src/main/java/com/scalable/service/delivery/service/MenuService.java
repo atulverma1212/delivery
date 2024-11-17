@@ -64,4 +64,10 @@ public class MenuService {
         }
         return menu;
     }
+
+    public Menu createMenu(Menu menu) {
+        List<MenuItem> menuItems = menu.getItems();
+        menuItemRepository.saveAll(menuItems);
+        return menuRepository.save(menu);
+    }
 }

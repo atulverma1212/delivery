@@ -1,5 +1,6 @@
 package com.scalable.service.delivery.service;
 
+import com.scalable.service.delivery.enums.OrderStatus;
 import com.scalable.service.delivery.exception.EntityNotFoundException;
 import com.scalable.service.delivery.model.MenuItem;
 import com.scalable.service.delivery.model.Order;
@@ -35,18 +36,25 @@ public class OrderService {
 
             totalPrice += menuItem.getPrice() * orderItem.getQuantity();
         }
+        order.setStatus(OrderStatus.PLACED);
         order.setTotalPrice(totalPrice);
         order.setCreatedDate(LocalDateTime.now());
         return orderRepository.save(order);
     }
 
-    public String getOrderStatus(String orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() ->
+    public Order getOrderById(String orderId) {
+        return orderRepository.findById(orderId).orElseThrow(() ->
                 new EntityNotFoundException("Order with ID " + orderId + " not found"));
-        return order.getStatus();
     }
 
     public List<Order> getOrderHistory(String customerId) {
         return orderRepository.findByCustomerIdOrderByCreatedAtDesc(customerId);
+    }
+
+    public Order updateOrderStatus(String orderId, OrderStatus status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        order.setStatus(status);
+        return orderRepository.save(order);
     }
 }
