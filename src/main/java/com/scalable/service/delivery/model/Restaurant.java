@@ -13,6 +13,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Document(collection = "restaurants")
 public class Restaurant {
     @Id
